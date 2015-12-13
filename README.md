@@ -1,12 +1,12 @@
 Music Ninja Player
 ======================
 
-Web app to play music on your computer
+GoLang web app music player
 
     go run *.go
 
 
-Build
+Required
 -----
 
 sudo apt-get install sox
