@@ -11,11 +11,13 @@ import (
 // Defaults
 var start_time = time.Now()
 const PORT string = "8080"
+const CONF string = "music.json"
 
 func main() {
 
     // Parse command line for arguements
     port := flag.String("port", PORT, "server port")
+    conf := flag.String("conf", CONFIG, "config json file")
     flag.Parse()
 
     // Setup log

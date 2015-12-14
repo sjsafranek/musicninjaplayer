@@ -2,9 +2,13 @@
 	"playlists": [
 		{
 			"dir": "music",
-			"name": "playlist1",
+			"name": "High Step Society",
 			"songs": [
-				"song1.mp3",
+				"April Juke Firehouse Blues mastered.wav",
+				"Caravan.wav",
+				"Echoes of Whiteaker MSTR.wav",
+				"It Don't Mean a Thing MSTR.wav",
+				"Toodle-oo MSTR.wav"
 			]
 		}
 	]
