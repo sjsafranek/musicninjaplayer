@@ -11,7 +11,7 @@ var current_song_id = 0
 func randomSong() string {
 	files, _ := ioutil.ReadDir("./music")
 	i := randInt(0,len(files))
-	if files[i].Name() == current_song_name {
+	if files[i].Name() == current_song_name || files[i].Name() == ".gitignore" {
 		return randomSong()
 	} else {
 		current_song_name = files[i].Name()
