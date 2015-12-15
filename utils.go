@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"unsafe"
 	"time"
+	"os/user"
 )
 
 // Returns random int between min and max
@@ -35,7 +36,15 @@ func modulo(x int, y int) int {
 	return z
 }
 
-
+// Get home directory
+// http://stackoverflow.com/questions/7922270/obtain-users-home-directory
+func homeDir() string {
+	usr, err := user.Current()
+	if err != nil {
+		Error.Fatal( err )
+	}
+	return usr.HomeDir
+}
 
 func BytesToString(b []byte) string {
 	bh := (*reflect.SliceHeader)(unsafe.Pointer(&b))

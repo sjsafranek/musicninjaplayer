@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 	"io/ioutil"
+	"net/http"
 )
 
 var Playlists = getPlaylists()
@@ -28,4 +29,8 @@ func getPlaylists() MusicData {
 		Error.Print("Error:",err)
 	}
 	return music
+}
+
+func playlistsHandler(w http.ResponseWriter, r *http.Request) {
+	json.NewEncoder(w).Encode(Playlists)
 }

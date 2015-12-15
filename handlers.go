@@ -1,11 +1,11 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"net/http"
 	"encoding/json"
 	"time"
-	"io/ioutil"
+	// "io/ioutil"
 	"html/template"
 )
 
@@ -62,7 +62,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		<div class="container">
 			<div class="row">
 				<div class="col-md-2">
-					<img src="/logo.png" alt="log0" style="height:170px; width:170px;">
+					<img src="/logo.png" alt="logo" style="height:170px; width:170px;">
 				</div>
 				<div class="col-md-4">
 					<h3>Music Ninja Player</h3>
@@ -138,15 +138,15 @@ type ApiReturn struct {
 	Song	   string	  `json:"song"`
 }
 
-func apiListMusic(w http.ResponseWriter, r *http.Request) {
-	Info.Printf("%s something is happening...", r.RemoteAddr)
-	songs := ""
-	files, _ := ioutil.ReadDir("./music")
-	for i := 0; i < len(files); i++ {
-		songs += files[i].Name() + "\n"
-	}
-	fmt.Fprintf(w, songs)
-}
+// func apiListMusic(w http.ResponseWriter, r *http.Request) {
+// 	Info.Printf("%s something is happening...", r.RemoteAddr)
+// 	songs := ""
+// 	files, _ := ioutil.ReadDir("./music")
+// 	for i := 0; i < len(files); i++ {
+// 		songs += files[i].Name() + "\n"
+// 	}
+// 	fmt.Fprintf(w, songs)
+// }
 
 func playMusicHandler(w http.ResponseWriter, r *http.Request) {
 	Info.Printf("%s something is happening...", r.RemoteAddr)
@@ -169,10 +169,6 @@ func stopMusicHandler(w http.ResponseWriter, r *http.Request) {
 	stopMusic()
 	resp := ApiReturn{Message: "Silence!", Results: "ok", Action: "stop", Song: current_song_name}
 	json.NewEncoder(w).Encode(resp)
-}
-
-func playlistsHandler(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(Playlists)
 }
 
 func backTrackHandler(w http.ResponseWriter, r *http.Request) {
