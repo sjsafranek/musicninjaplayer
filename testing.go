@@ -10,7 +10,10 @@ func testHandler(w http.ResponseWriter, r *http.Request) {
 	files := getMusicFiles()
 	song_list := ""
 	for _, v := range files {
-		song_list += `<tr class="song"><td id="` + v + `">` + v + `</td></tr>`
+		song_list += `
+					<tr class="song">
+						<td id="` + v + `">` + v + `</td>
+					</tr>`
 	}
 
 	Info.Printf("%s something is happening", r.RemoteAddr)
@@ -35,28 +38,6 @@ func testHandler(w http.ResponseWriter, r *http.Request) {
 	<style>
 		
 		body { padding-top: 50px; }
-
-		/*  Table Style */
-		table {
-			border-collapse: collapse;
-			width: 100%;
-		}
-		th, td {
-			padding: 15px;
-			text-align: left;
-		}
-		tr:nth-child(even) { background-color: #f2f2f2; }
-		table, th, td { border: 1px solid #ddd; }
-		th {
-			background-color: #4CAF50;
-			color: white;
-		}
-		tr:hover {
-			/* background-color: #f5f5f5	*/
-			background-color: #FF4040;
-			border-color: #FF4040;
-			box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 0, 0, 0.6);
-		}
 
 	</style>
 
@@ -95,20 +76,18 @@ func testHandler(w http.ResponseWriter, r *http.Request) {
 					<label><b>Current: </b></label><span id="current"></span>
 				</div>
 				<div>
-					<button type='button' id="back"><i id="back" class="fa fa-backward"></i></button>
-					<button type='button' id="play"><i id="play" class="fa fa-play"></i></button>
-					<button type='button' id="stop"><i id="stop" class="fa fa-stop"></i></button>
-					<button type='button' id="next"><i id="next" class="fa fa-forward"></i></button>
+					<button type='button' id="back" class="btn btn-primary"><i id="back" class="fa fa-backward"></i></button>
+					<button type='button' id="play" class="btn btn-primary"><i id="play" class="fa fa-play"></i></button>
+					<button type='button' id="stop" class="btn btn-primary"><i id="stop" class="fa fa-stop"></i></button>
+					<button type='button' id="next" class="btn btn-primary"><i id="next" class="fa fa-forward"></i></button>
 				</div>
 			</div>
 			<div class="col-md-6">
 				<!-- <h3>Playlist</h3> -->
 				<h3></h3>
-				<table>
+				<table class="table table-striped table-bordered table-hover">
 					<tr>
-						<th>
-							Songs
-						</th>
+						<th class="success">Songs</th>
 					</tr>
 					` + song_list + `
 				</table>
@@ -134,7 +113,6 @@ func testHandler(w http.ResponseWriter, r *http.Request) {
 				url: "api/v1/play",
 				data: "song=" + event.target.id,
 				success: function( data ) {
-					// data = $.parseJSON(data);
 					console.log(data);
 					$("#current")[0].innerText = " " + data.song;
 				},
