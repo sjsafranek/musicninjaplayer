@@ -9,10 +9,14 @@ import (
 var current_song_name string
 var current_song_id = 0 
 
-// func getFiles() []os.FileInfo {
-// 	files, _ := ioutil.ReadDir(MUSIC_DIR)
-// 	return files
-// }
+func getMusicFiles() []string {
+	results := []string{}
+	files, _ := ioutil.ReadDir(MUSIC_DIR)
+	for i := 0; i < len(files); i++ {
+		results = append(results,files[i].Name())
+	}
+	return results
+}
 
 func randomSong() string {
 	files, _ := ioutil.ReadDir(MUSIC_DIR)

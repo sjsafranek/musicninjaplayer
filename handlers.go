@@ -138,16 +138,6 @@ type ApiReturn struct {
 	Song	   string	  `json:"song"`
 }
 
-// func apiListMusic(w http.ResponseWriter, r *http.Request) {
-// 	Info.Printf("%s something is happening...", r.RemoteAddr)
-// 	songs := ""
-// 	files, _ := ioutil.ReadDir("./music")
-// 	for i := 0; i < len(files); i++ {
-// 		songs += files[i].Name() + "\n"
-// 	}
-// 	fmt.Fprintf(w, songs)
-// }
-
 func playMusicHandler(w http.ResponseWriter, r *http.Request) {
 	Info.Printf("%s something is happening...", r.RemoteAddr)
 	var song string
@@ -200,10 +190,3 @@ func nextTrackHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(resp)
 }
 
-
-
-/*
-
-
-
-*/
