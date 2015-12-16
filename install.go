@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 	"runtime"
 	"net/http"
@@ -122,37 +123,32 @@ func downloadFromUrl(url string, outDir string) {
 	// CHECK IF FILE EXISTS
 	_, file_err := os.Stat(fileName)
 	if file_err == nil {
-		Info.Printf("File %s exists", fileName)
 		return
-	} else {
-		Info.Printf("File %s not found", fileName)
 	}
 
-	Info.Println("Downloading", url, "to", fileName)
+	Info.Println("Downloading", url)
 
-	// TODO: check file existence first with io.IsExist
 	output, err := os.Create(fileName)
 	if err != nil {
-		Info.Println("Error while creating", fileName, "-", err)
+		Error.Println("Error while creating", filepath.Base(fileName), "-", err)
 		return
 	}
 	defer output.Close()
 
 	response, err := http.Get(url)
 	if err != nil {
-		Info.Println("Error while downloading", url, "-", err)
+		Error.Println("Error while downloading", url, "-", err)
 		return
 	}
 	defer response.Body.Close()
 
 	n, err := io.Copy(output, response.Body)
+	// _, err = io.Copy(output, response.Body)
 	if err != nil {
-		Info.Println("Error while downloading", url, "-", err)
+		Error.Println("Error while downloading", url, "-", err)
 		return
 	}
-
 	Info.Println(n, "bytes downloaded.")
-
 
 }
 
@@ -161,12 +157,14 @@ func downloadFromUrl(url string, outDir string) {
 func dir_init() {
 
 	// Create Application Directories
+	Info.Println("Checking app directories")
 	setup_music_dir()
 	ninja_dir()
 	ninja_music_dir()
 	static_dir()
 
 	// Icons & Images
+	Info.Println("Checking resource files")
 	downloadFromUrl("https://raw.githubusercontent.com/sjsafranek/musicninjaplayer/master/static/logo.png", STATIC_DIR)
 	downloadFromUrl("https://raw.githubusercontent.com/sjsafranek/musicninjaplayer/master/static/favicon.ico", STATIC_DIR)
 	downloadFromUrl("https://raw.githubusercontent.com/sjsafranek/musicninjaplayer/master/static/error.png", STATIC_DIR)

@@ -158,7 +158,7 @@ func playMusicHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	go func() {
 		Info.Printf("%s %s", r.RemoteAddr, song)
-		playMusic(song)
+		playMusic(current_song_name)
 	}()
 	resp := ApiReturn{Message: song, Results: "ok", Action: "play", Song: song}
 	json.NewEncoder(w).Encode(resp)
@@ -166,6 +166,7 @@ func playMusicHandler(w http.ResponseWriter, r *http.Request) {
 
 func stopMusicHandler(w http.ResponseWriter, r *http.Request) {
 	Info.Printf("%s something is happening...", r.RemoteAddr)
+	Info.Printf("%s %s", r.RemoteAddr, "Stopping music")
 	stopMusic()
 	resp := ApiReturn{Message: "Silence!", Results: "ok", Action: "stop", Song: current_song_name}
 	json.NewEncoder(w).Encode(resp)
@@ -175,7 +176,11 @@ func backTrackHandler(w http.ResponseWriter, r *http.Request) {
 	Info.Printf("%s something is happening...", r.RemoteAddr)
 	backSong()
 	go func() {
-		playMusic(current_song_name)
+		if current_song_name != "No music files" {
+			playMusic(current_song_name)
+		} else {
+			Warning.Printf("%s no music files...", r.RemoteAddr)
+		}
 	}()
 	resp := ApiReturn{Message: "change track", Results: "ok", Action: "back", Song: current_song_name}
 	json.NewEncoder(w).Encode(resp)
@@ -185,7 +190,11 @@ func nextTrackHandler(w http.ResponseWriter, r *http.Request) {
 	Info.Printf("%s something is happening...", r.RemoteAddr)
 	nextSong()
 	go func() {
-		playMusic(current_song_name)
+		if current_song_name != "No music files" {
+			playMusic(current_song_name)
+		} else {
+			Warning.Printf("%s no music files...", r.RemoteAddr)
+		}
 	}()
 	resp := ApiReturn{Message: "change track", Results: "ok", Action: "next", Song: current_song_name}
 	json.NewEncoder(w).Encode(resp)

@@ -26,7 +26,7 @@ func randomSong() string {
 			return files[i].Name()
 		}
 	} else {
-		Error.Println("No files found")
+		Warning.Println("No files found")
 		return "No music files"
 	}
 }
@@ -40,6 +40,8 @@ func backSong() {
 		} else {
 			backSong()
 		}
+	} else {
+		current_song_name = "No music files"
 	}
 }
 
@@ -52,20 +54,10 @@ func nextSong() {
 		} else {
 			nextSong()
 		}
+	} else {
+		current_song_name = "No music files"
 	}
 }
-
-// func playMusic(song ...string) {
-//	 stopMusic()
-//	 cmd := "play"
-//	 args := []string{"music/" + song[0]}
-//	 _, err := exec.Command(cmd, args...).Output()
-//	 if err != nil {
-//		 Error.Println(err)
-//	 } else {
-//		 Info.Printf("Playing %s", song[0])
-//	 }
-// }
 
 func playMusic(song string) {
 	stopMusic()
@@ -73,7 +65,7 @@ func playMusic(song string) {
 	args := []string{ path.Join(MUSIC_DIR, song) }
 	_, err := exec.Command(cmd, args...).Output()
 	if err != nil {
-		Error.Println(err)
+		Warning.Println(err)
 	} else {
 		Info.Printf("Playing %s", song)
 	}
