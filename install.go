@@ -73,6 +73,7 @@ func downloadFromUrl(url string, outDir string) {
 
 	tokens := strings.Split(url, "/")
 	fileName := path.Join(outDir, tokens[len(tokens)-1])
+	fileName = strings.Split(fileName,"?")[0]
 
 	// CHECK IF FILE EXISTS
 	_, file_err := os.Stat(fileName)
@@ -114,15 +115,27 @@ func downloadFromUrl(url string, outDir string) {
 
 
 func dir_init() {
+
 	// Create Application Directories
 	setup_music_dir()
 	setup_ninja_dir()
 	setup_ninja_music_dir()
 	setup_ninja_static_dir()
 
+	// Icons & Images
 	downloadFromUrl("https://raw.githubusercontent.com/sjsafranek/musicninjaplayer/master/static/logo.png", STATIC_DIR)
 	downloadFromUrl("https://raw.githubusercontent.com/sjsafranek/musicninjaplayer/master/static/favicon.ico", STATIC_DIR)
 	downloadFromUrl("https://raw.githubusercontent.com/sjsafranek/musicninjaplayer/master/static/error.png", STATIC_DIR)
+
+	// Javascript and Stylesheets
+	downloadFromUrl("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/fonts/fontawesome-webfont.woff2?v=4.5.0", STATIC_DIR)
+	downloadFromUrl("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/fonts/fontawesome-webfont.ttf?v=4.5.0", STATIC_DIR)
+	downloadFromUrl("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css", STATIC_DIR)
+	downloadFromUrl("https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js", STATIC_DIR)
+	downloadFromUrl("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js", STATIC_DIR)
+	downloadFromUrl("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", STATIC_DIR)
+	downloadFromUrl("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css", STATIC_DIR)
+
 }
 
 

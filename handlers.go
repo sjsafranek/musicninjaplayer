@@ -62,7 +62,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		<div class="container">
 			<div class="row">
 				<div class="col-md-2">
-					<img src="/logo.png" alt="logo" style="height:170px; width:170px;">
+					<img src="/static/logo.png" alt="logo" style="height:170px; width:170px;">
 				</div>
 				<div class="col-md-4">
 					<h3>Music Ninja Player</h3>
@@ -190,3 +190,11 @@ func nextTrackHandler(w http.ResponseWriter, r *http.Request) {
 	resp := ApiReturn{Message: "change track", Results: "ok", Action: "next", Song: current_song_name}
 	json.NewEncoder(w).Encode(resp)
 }
+
+
+
+/*
+
+
+
+*/
