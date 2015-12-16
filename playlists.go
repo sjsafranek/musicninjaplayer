@@ -9,7 +9,7 @@ import (
 var Playlists = getPlaylists()
 
 type Playlist struct {
-	Dir        string      `json"dir"`
+	Dir        string      `json:"dir"`
 	Name       string      `json:"name"`
 	Songs      []string    `json:"songs"`
 }

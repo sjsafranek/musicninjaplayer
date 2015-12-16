@@ -15,7 +15,6 @@ var current_song_id = 0
 // }
 
 func randomSong() string {
-	// files, _ := ioutil.ReadDir("./music")
 	files, _ := ioutil.ReadDir(MUSIC_DIR)
 	if len(files) != 0 {
 		i := randInt(0,len(files))
@@ -27,32 +26,32 @@ func randomSong() string {
 			return files[i].Name()
 		}
 	} else {
-		Error.Fatal("No files found")
+		Error.Println("No files found")
 		return "No music files"
 	}
 }
 
 func backSong() {
-	// files, _ := ioutil.ReadDir("./music")
 	files, _ := ioutil.ReadDir(MUSIC_DIR)
-	
-	current_song_id = modulo((current_song_id - 1), len(files))
-	if files[current_song_id].Name() != ".gitignore" {
-		current_song_name = files[current_song_id].Name()
-	} else {
-		backSong()
+	if len(files) != 0 {
+		current_song_id = modulo((current_song_id - 1), len(files))
+		if files[current_song_id].Name() != ".gitignore" {
+			current_song_name = files[current_song_id].Name()
+		} else {
+			backSong()
+		}
 	}
-	
 }
 
 func nextSong() {
-	// files, _ := ioutil.ReadDir("./music")
 	files, _ := ioutil.ReadDir(MUSIC_DIR)
-	current_song_id = (current_song_id + 1) % len(files)
-	if files[current_song_id].Name() != ".gitignore" {
-		current_song_name = files[current_song_id].Name()
-	} else {
-		nextSong()
+	if len(files) != 0 {
+		current_song_id = (current_song_id + 1) % len(files)
+		if files[current_song_id].Name() != ".gitignore" {
+			current_song_name = files[current_song_id].Name()
+		} else {
+			nextSong()
+		}
 	}
 }
 
@@ -71,7 +70,6 @@ func nextSong() {
 func playMusic(song string) {
 	stopMusic()
 	cmd := "play"
-	// args := []string{"music/" + song}
 	args := []string{ path.Join(MUSIC_DIR, song) }
 	_, err := exec.Command(cmd, args...).Output()
 	if err != nil {

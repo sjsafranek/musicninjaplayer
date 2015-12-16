@@ -39,8 +39,6 @@ func main() {
 	http.HandleFunc("/api/v1/stop", stopMusicHandler)
 	http.HandleFunc("/api/v1/back", backTrackHandler)
 	http.HandleFunc("/api/v1/next", nextTrackHandler)
-	// http.HandleFunc("/api/v1/list", apiListMusic)
-	// http.HandleFunc("/api/v1/playlists", playlistsHandler)
 	
 	// Start app
 	Info.Printf("Magic happens on port %s...", *port)
