@@ -28,7 +28,7 @@ func setup_music_dir() {
 	}
 }
 
-func setup_ninja_dir() {
+func ninja_dir() {
 	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
 		_, err := os.Stat(path.Join(BASE_DIR,"Ninja"))
 		if err != nil {
@@ -41,7 +41,7 @@ func setup_ninja_dir() {
 	}
 }
 
-func setup_ninja_music_dir() {
+func ninja_music_dir() {
 	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
 		_, err := os.Stat(path.Join(BASE_DIR,"Ninja", "music"))
 		if err != nil {
@@ -54,7 +54,7 @@ func setup_ninja_music_dir() {
 	}
 }
 
-func setup_ninja_static_dir() {
+func static_dir() {
 	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
 		_, err := os.Stat(path.Join(BASE_DIR,"Ninja", "static"))
 		if err != nil {
@@ -62,10 +62,54 @@ func setup_ninja_static_dir() {
 			os.Mkdir(path.Join(BASE_DIR,"Ninja", "static"), os.ModeSticky | 0755)
 		}
 		STATIC_DIR = path.Join(BASE_DIR,"Ninja", "static")
+		css_dir()
+		js_dir()
+		fonts_dir()
 	} else {
 		Error.Fatal("This OS is not supported!")
 	}
 }
+
+
+
+func css_dir() {
+	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
+		_, err := os.Stat(path.Join(STATIC_DIR, "css"))
+		if err != nil {
+			Info.Printf("Creating %s", path.Join(STATIC_DIR,"css"))
+			os.Mkdir(path.Join(STATIC_DIR,"css"), os.ModeSticky | 0755)
+		}
+	} else {
+		Error.Fatal("This OS is not supported!")
+	}
+}
+
+func js_dir() {
+	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
+		_, err := os.Stat(path.Join(STATIC_DIR, "js"))
+		if err != nil {
+			Info.Printf("Creating %s", path.Join(STATIC_DIR,"js"))
+			os.Mkdir(path.Join(STATIC_DIR,"js"), os.ModeSticky | 0755)
+		}
+	} else {
+		Error.Fatal("This OS is not supported!")
+	}
+}
+
+func fonts_dir() {
+	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
+		_, err := os.Stat(path.Join(STATIC_DIR, "fonts"))
+		if err != nil {
+			Info.Printf("Creating %s", path.Join(STATIC_DIR,"fonts"))
+			os.Mkdir(path.Join(STATIC_DIR,"fonts"), os.ModeSticky | 0755)
+		}
+	} else {
+		Error.Fatal("This OS is not supported!")
+	}
+}
+
+
+
 
 
 func downloadFromUrl(url string, outDir string) {
@@ -118,9 +162,9 @@ func dir_init() {
 
 	// Create Application Directories
 	setup_music_dir()
-	setup_ninja_dir()
-	setup_ninja_music_dir()
-	setup_ninja_static_dir()
+	ninja_dir()
+	ninja_music_dir()
+	static_dir()
 
 	// Icons & Images
 	downloadFromUrl("https://raw.githubusercontent.com/sjsafranek/musicninjaplayer/master/static/logo.png", STATIC_DIR)
@@ -128,13 +172,13 @@ func dir_init() {
 	downloadFromUrl("https://raw.githubusercontent.com/sjsafranek/musicninjaplayer/master/static/error.png", STATIC_DIR)
 
 	// Javascript and Stylesheets
-	downloadFromUrl("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/fonts/fontawesome-webfont.woff2?v=4.5.0", STATIC_DIR)
-	downloadFromUrl("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/fonts/fontawesome-webfont.ttf?v=4.5.0", STATIC_DIR)
-	downloadFromUrl("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css", STATIC_DIR)
-	downloadFromUrl("https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js", STATIC_DIR)
-	downloadFromUrl("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js", STATIC_DIR)
-	downloadFromUrl("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", STATIC_DIR)
-	downloadFromUrl("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css", STATIC_DIR)
+	downloadFromUrl("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/fonts/fontawesome-webfont.woff2?v=4.5.0", path.Join(STATIC_DIR,"fonts"))
+	downloadFromUrl("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/fonts/fontawesome-webfont.ttf?v=4.5.0", path.Join(STATIC_DIR,"fonts"))
+	downloadFromUrl("https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css", path.Join(STATIC_DIR,"css"))
+	downloadFromUrl("https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js", path.Join(STATIC_DIR,"js"))
+	downloadFromUrl("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js", path.Join(STATIC_DIR,"js"))
+	downloadFromUrl("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css", path.Join(STATIC_DIR,"css"))
+	downloadFromUrl("https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css", path.Join(STATIC_DIR,"css"))
 
 }
 

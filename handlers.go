@@ -17,17 +17,17 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 
 		<title>Music Ninja Player</title>
 
-	    <meta charset="utf-8">
-	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-	    <meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-		<script src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+		<link rel="stylesheet" href="/static/css/font-awesome.min.css">
+		<script src="/static/js/jquery.min.js"></script>
 
 		<!-- Latest compiled and minified CSS -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<link rel="stylesheet" href="/static/css/bootstrap.min.css">
 		<!-- Optional theme -->
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+		<link rel="stylesheet" href="/static/css/bootstrap-theme.min.css">
 
 		<style>
 			body {
@@ -57,7 +57,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 	          </ul>
 	        </div><!--/.nav-collapse -->
 	      </div>
-	    </nav>
+	    </nav><!-- /.nav -->
 
 		<div class="container">
 			<div class="row">
@@ -83,7 +83,7 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		</div><!-- /.container -->
 
 		<!-- Latest compiled and minified JavaScript -->
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<script src="/static/js/bootstrap.min.js"></script>
 		<script>
 			function action(event) {
 				$.get( "api/v1/" + event.target.id, function( data ) {
