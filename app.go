@@ -7,6 +7,7 @@ import (
 	"flag"
 	"net/http"
 	"path"
+	"golang.org/x/net/websocket"
 )
 
 // Defaults
@@ -43,6 +44,9 @@ func main() {
 	http.HandleFunc("/api/v1/stop", stopMusicHandler)
 	http.HandleFunc("/api/v1/back", backTrackHandler)
 	http.HandleFunc("/api/v1/next", nextTrackHandler)
+
+	// Web Socket
+	http.Handle("/ws", websocket.Handler(webSocketHandler))
 
 	// Start app
 	Info.Printf("Magic happens on port %s...", *port)

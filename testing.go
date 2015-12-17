@@ -3,8 +3,71 @@ package main
 import (
 	"net/http"
 	"html/template"
+	"golang.org/x/net/websocket"
 )
 
+type SocketMessage struct {
+	Action  string    `json:"action"`
+	Song    string    `json:"song"`
+}
+
+// func webSocketSendJson(ws *websocket.Conn, ) {
+// 	resp := ApiReturn{Message: "Song is finished", Results: "ok", Action: "stop", Song: ""}
+// 	websocket.JSON.Send(ws, resp)
+// }
+
+func webSocketHandler(ws *websocket.Conn) {
+	var data SocketMessage
+	if err := websocket.JSON.Receive(ws, &data); err != nil {
+		Error.Println(err)
+		return
+	} else {
+		switch data.Action {
+			case "play":
+				var song string
+				if data.Song != "" {
+					song = data.Song
+				} else {
+					song = randomSong()
+				}
+				go func() {
+					playMusic(current_song_name)
+					resp := ApiReturn{Message: "Song is finished", Results: "ok", Action: "stop", Song: ""}
+					websocket.JSON.Send(ws, resp)
+				}()
+				resp := ApiReturn{Message: song, Results: "ok", Action: "play", Song: song}
+				websocket.JSON.Send(ws, resp)
+			case "back":
+				backSong()
+				go func() {
+					if current_song_name != "No music files" {
+						playMusic(current_song_name)
+					} else {
+						Warning.Printf("no music files...")
+					}
+				}()
+				resp := ApiReturn{Message: "change track", Results: "ok", Action: "back", Song: current_song_name}
+				websocket.JSON.Send(ws, resp)
+			case "next":
+				nextSong()
+				go func() {
+					if current_song_name != "No music files" {
+						playMusic(current_song_name)
+					} else {
+						Warning.Printf("no music files...")
+					}
+				}()
+				resp := ApiReturn{Message: "change track", Results: "ok", Action: "next", Song: current_song_name}
+				websocket.JSON.Send(ws, resp)
+			default: // "stop"
+				stopMusic()
+				resp := ApiReturn{Message: "Silence!", Results: "ok", Action: "stop", Song: current_song_name}
+				websocket.JSON.Send(ws, resp)
+		}
+	}
+	Info.Printf("Received: %s %s", data.Action, data.Song)
+	// websocket.JSON.Send(ws, data)
+}
 
 func testHandler(w http.ResponseWriter, r *http.Request) {
 	files := getMusicFiles()
@@ -99,27 +162,44 @@ func testHandler(w http.ResponseWriter, r *http.Request) {
 	<script src="/static/js/bootstrap.min.js"></script>
 	<script>
 
+		// Setup Websocket
+		function sendMessage(payload) {
+			console.log("Opening websocket");
+			ws = new WebSocket("ws://localhost:8080/ws");
+			ws.onopen = function(e) { 
+				console.log("Websocket is open");
+				ws.send(payload);
+			};
+			ws.onmessage = function(e) {
+				var data = JSON.parse(e.data);
+				console.log("Data recieved:",data);
+				$("#current")[0].innerText = " " + data.song;
+			};
+			ws.onclose = function(e) { console.log("Websocket is closed"); }
+			ws.onerror = function(e) { console.log(e); }
+			return ws;
+		}
+
 		function playSong(event) {
-			$.get( "api/v1/" + event.target.id, function( data ) {
-				data = $.parseJSON(data);
-				console.log(data);
-				$("#current")[0].innerText = " " + data.song;;
-			});
+			console.log("Sending WebSocket request")
+			var msg = {
+				action: event.target.id,
+				song: null
+			};
+			var ws = sendMessage(JSON.stringify(msg));
 		}
 		$("button").on("click", playSong);
 
 		function chooseSong(event) {
-			$.ajax({
-				url: "api/v1/play",
-				data: "song=" + event.target.id,
-				success: function( data ) {
-					console.log(data);
-					$("#current")[0].innerText = " " + data.song;
-				},
-				dataType: "json"
-			});
+			console.log("Sending WebSocket request")
+			var msg = {
+				action: "play",
+				song: event.target.id
+			}
+			var ws = sendMessage(JSON.stringify(msg));
 		}
 		$("tr").on("click",chooseSong)
+
 
 	</script>
 
