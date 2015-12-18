@@ -38,6 +38,7 @@ func main() {
 	http.HandleFunc("/api", apiClientHandler)
 	http.HandleFunc("/socket", socketClientHandler)
 	http.HandleFunc("/ping", pingHandler)
+	http.HandleFunc("/error", clientErrorHandler)
 
 	//  Api Routes
 	http.HandleFunc("/api/v1/play", playMusicHandler)

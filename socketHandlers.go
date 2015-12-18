@@ -11,6 +11,11 @@ type SocketMessage struct {
 	Song    string    `json:"song"`
 }
 
+func clientErrorHandler(w http.ResponseWriter, r *http.Request) {
+	Error.Println("%s client had an error", r.RemoteAddr)
+	http.ServeFile(w, r, "./static/error.png")
+}
+
 func webSocketNextSong(ws *websocket.Conn) {
 	nextSong()
 	if current_song_name != "No music files" {
@@ -192,6 +197,7 @@ func socketClientHandler(w http.ResponseWriter, r *http.Request) {
 			ws.onclose = function(e) { 
 				console.log("Websocket is closed"); 
 				alert("Connection error!!");
+				window.location = "/error";
 			}
 			ws.onerror = function(e) { console.log(e); }
 			return ws;
@@ -207,7 +213,14 @@ func socketClientHandler(w http.ResponseWriter, r *http.Request) {
 				song: null
 			};
 			var payload = JSON.stringify(msg);
-			ws.send(payload);
+			try {
+				ws.send(payload);
+			}
+			catch(err) {
+				console.log(err);
+				alert(err);
+				window.location = "/error";
+			}
 		}
 		$("button").on("click", playSong);
 
@@ -218,7 +231,14 @@ func socketClientHandler(w http.ResponseWriter, r *http.Request) {
 				song: event.target.id
 			}
 			var payload = JSON.stringify(msg);
-			ws.send(payload);
+			try {
+				ws.send(payload);
+			}
+			catch(err) {
+				console.log(err);
+				alert(err);
+				window.location = "/error";
+			}
 		}
 		$("tr").on("click",chooseSong)
 
