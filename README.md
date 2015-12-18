@@ -10,4 +10,5 @@ Required
 -----
 
 sudo apt-get install sox
+go get golang.org/x/net/websocket
 

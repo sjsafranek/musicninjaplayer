@@ -11,14 +11,30 @@ type SocketMessage struct {
 	Song    string    `json:"song"`
 }
 
+func webSocketNextSong(ws *websocket.Conn) {
+	nextSong()
+	if current_song_name != "No music files" {
+		resp := ApiReturn{Message: current_song_name, Results: "ok", Action: "play", Song: current_song_name}
+		websocket.JSON.Send(ws, resp)
+		playMusic(current_song_name)
+	} else {
+		Warning.Printf("no music files...")
+		return
+	}
+	resp := ApiReturn{Message: "Song is finished", Results: "ok", Action: "stop", Song: ""}
+	websocket.JSON.Send(ws, resp)
+	webSocketNextSong(ws)
+}
 
 func webSocketHandler(ws *websocket.Conn) {
 	// http://41j.com/blog/2014/12/simple-websocket-example-golang/
+	// https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
 	var data SocketMessage
 	for {
 		if err := websocket.JSON.Receive(ws, &data); err != nil {
 			stopMusic()
 			Error.Println(err)
+			// break
 			return
 		} else {
 			switch data.Action {
@@ -138,10 +154,10 @@ func socketClientHandler(w http.ResponseWriter, r *http.Request) {
 					<label><b>Current: </b></label><span id="current"></span>
 				</div>
 				<div>
-					<button type='button' id="back" class="btn btn-primary"><i id="back" class="fa fa-backward"></i></button>
-					<button type='button' id="play" class="btn btn-primary"><i id="play" class="fa fa-play"></i></button>
-					<button type='button' id="stop" class="btn btn-primary"><i id="stop" class="fa fa-stop"></i></button>
-					<button type='button' id="next" class="btn btn-primary"><i id="next" class="fa fa-forward"></i></button>
+					<button type='button' title="back track" id="back" class="btn btn-primary"><i id="back" class="fa fa-backward"></i></button>
+					<button type='button' title="random track" id="play" class="btn btn-primary"><i id="play" class="fa fa-play"></i></button>
+					<button type='button' title="stop music" id="stop" class="btn btn-primary"><i id="stop" class="fa fa-stop"></i></button>
+					<button type='button' title="next track" id="next" class="btn btn-primary"><i id="next" class="fa fa-forward"></i></button>
 				</div>
 			</div>
 			<div class="col-md-6">
@@ -173,7 +189,10 @@ func socketClientHandler(w http.ResponseWriter, r *http.Request) {
 				console.log("Data recieved:",data);
 				$("#current")[0].innerText = " " + data.song;
 			};
-			ws.onclose = function(e) { console.log("Websocket is closed"); }
+			ws.onclose = function(e) { 
+				console.log("Websocket is closed"); 
+				alert("Connection error!!");
+			}
 			ws.onerror = function(e) { console.log(e); }
 			return ws;
 		}

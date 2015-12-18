@@ -188,5 +188,4 @@ func dir_init() {
 https://gobyexample.com/methods
 
 
-
 */

@@ -77,10 +77,10 @@ func apiClientHandler(w http.ResponseWriter, r *http.Request) {
 					<label><b>Current: </b></label><span id="current"></span>
 				</div>
 				<div>
-					<button type='button' id="back" class="btn btn-primary"><i id="back" class="fa fa-backward"></i></button>
-					<button type='button' id="play" class="btn btn-primary"><i id="play" class="fa fa-play"></i></button>
-					<button type='button' id="stop" class="btn btn-primary"><i id="stop" class="fa fa-stop"></i></button>
-					<button type='button' id="next" class="btn btn-primary"><i id="next" class="fa fa-forward"></i></button>
+					<button type='button' title="back track" id="back" class="btn btn-primary"><i id="back" class="fa fa-backward"></i></button>
+					<button type='button' title="random track" id="play" class="btn btn-primary"><i id="play" class="fa fa-play"></i></button>
+					<button type='button' title="stop music" id="stop" class="btn btn-primary"><i id="stop" class="fa fa-stop"></i></button>
+					<button type='button' title="next track" id="next" class="btn btn-primary"><i id="next" class="fa fa-forward"></i></button>
 				</div>
 			</div>
 			<div class="col-md-6">
