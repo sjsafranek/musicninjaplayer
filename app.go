@@ -35,8 +35,8 @@ func main() {
 	http.Handle("/static/",http.StripPrefix("/static/",fs))
 	
 	// Main Routes
-	http.HandleFunc("/", indexHandler)
-	http.HandleFunc("/test", testHandler)
+	http.HandleFunc("/api", apiClientHandler)
+	http.HandleFunc("/socket", socketClientHandler)
 	http.HandleFunc("/ping", pingHandler)
 
 	//  Api Routes

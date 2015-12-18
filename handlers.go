@@ -1,15 +1,13 @@
 package main
 
 import (
-	// "fmt"
 	"net/http"
 	"encoding/json"
 	"time"
-	// "io/ioutil"
 	"html/template"
 )
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
+func apiClientHandler(w http.ResponseWriter, r *http.Request) {
 	files := getMusicFiles()
 	song_list := ""
 	for _, v := range files {
