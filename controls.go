@@ -33,6 +33,7 @@ func randomSong() string {
 		Warning.Println("No files found")
 		return "No music files"
 	}
+	return "this shouldnt happen"
 }
 
 func backSong() {
