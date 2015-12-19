@@ -186,7 +186,10 @@ func socketClientHandler(w http.ResponseWriter, r *http.Request) {
 		// Setup Websocket
 		function getWebSocket() {
 			console.log("Opening websocket");
-			ws = new WebSocket("ws://localhost:8080/ws");
+			// ws = new WebSocket("ws://localhost:8080/ws");
+			var url = "ws://" +window.location.host + "/ws";
+
+			ws = new WebSocket(url);
 			ws.onopen = function(e) { 
 				console.log("Websocket is open");
 			};
