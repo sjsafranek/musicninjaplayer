@@ -69,6 +69,8 @@ func playMusic(song string) {
 		_, err2 := exec.Command("omxpalyer","-o","local", args...).Output()
 		if err2 == nil {
 			Info.Printf("Playing %s", song)
+		} else {
+			Warning.Println(err2)
 		}
 	} else {
 		Info.Printf("Playing %s", song)
