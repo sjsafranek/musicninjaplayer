@@ -66,7 +66,7 @@ func playMusic(song string) {
 		// raspberry pi: raspbian
 		cmd := "omxpalyer -o local"
 		args := []string{ path.Join(MUSIC_DIR, song) }
-		_, err2 := exec.Command(cmd, args...).Output()
+		_, err2 := exec.Command("omxpalyer","-o","local", args...).Output()
 		if err2 == nil {
 			Info.Printf("Playing %s", song)
 		}
