@@ -26,9 +26,9 @@ func webSocketNextSong(ws *websocket.Conn) {
 		Warning.Printf("no music files...")
 		return
 	}
-	resp := ApiReturn{Message: "Song is finished", Results: "ok", Action: "stop", Song: ""}
-	websocket.JSON.Send(ws, resp)
-	webSocketNextSong(ws)
+	// resp := ApiReturn{Message: "Song is finished", Results: "ok", Action: "stop", Song: ""}
+	// websocket.JSON.Send(ws, resp)
+	// webSocketNextSong(ws)
 }
 
 func webSocketHandler(ws *websocket.Conn) {
@@ -51,6 +51,7 @@ func webSocketHandler(ws *websocket.Conn) {
 					}
 					go func(ws *websocket.Conn) {
 						playMusic(current_song_name)
+						// webSocketNextSong(ws)
 						resp := ApiReturn{Message: "Song is finished", Results: "ok", Action: "stop", Song: ""}
 						websocket.JSON.Send(ws, resp)
 					}(ws)
