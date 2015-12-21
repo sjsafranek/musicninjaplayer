@@ -16,7 +16,7 @@ var MUSIC_DIR  string
 var STATIC_DIR string
 
 func setup_music_dir() {
-	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
+	if runtime.GOOS == "windows" || runtime.GOOS == "linux" || runtime.GOOS == "darwin" {
 		BASE_DIR = path.Join(homeDir(),"Music")
 		BASE_DIR = strings.Replace(BASE_DIR,"\\","/",-1)
 		_, err := os.Stat(BASE_DIR)
@@ -30,7 +30,7 @@ func setup_music_dir() {
 }
 
 func ninja_dir() {
-	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
+		if runtime.GOOS == "windows" || runtime.GOOS == "linux" || runtime.GOOS == "darwin" {
 		_, err := os.Stat(path.Join(BASE_DIR,"Ninja"))
 		if err != nil {
 			Info.Printf("Creating %s", path.Join(BASE_DIR,"Ninja"))
@@ -43,7 +43,7 @@ func ninja_dir() {
 }
 
 func ninja_music_dir() {
-	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
+		if runtime.GOOS == "windows" || runtime.GOOS == "linux" || runtime.GOOS == "darwin" {
 		_, err := os.Stat(path.Join(BASE_DIR,"Ninja", "music"))
 		if err != nil {
 			Info.Printf("Creating %s", path.Join(BASE_DIR,"Ninja", "music"))
@@ -56,7 +56,7 @@ func ninja_music_dir() {
 }
 
 func static_dir() {
-	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
+	if runtime.GOOS == "windows" || runtime.GOOS == "linux" || runtime.GOOS == "darwin" {
 		_, err := os.Stat(path.Join(BASE_DIR,"Ninja", "static"))
 		if err != nil {
 			Info.Printf("Creating %s", path.Join(BASE_DIR,"Ninja", "static"))
@@ -74,7 +74,7 @@ func static_dir() {
 
 
 func css_dir() {
-	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
+	if runtime.GOOS == "windows" || runtime.GOOS == "linux" || runtime.GOOS == "darwin" {
 		_, err := os.Stat(path.Join(STATIC_DIR, "css"))
 		if err != nil {
 			Info.Printf("Creating %s", path.Join(STATIC_DIR,"css"))
@@ -86,7 +86,7 @@ func css_dir() {
 }
 
 func js_dir() {
-	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
+	if runtime.GOOS == "windows" || runtime.GOOS == "linux" || runtime.GOOS == "darwin" {
 		_, err := os.Stat(path.Join(STATIC_DIR, "js"))
 		if err != nil {
 			Info.Printf("Creating %s", path.Join(STATIC_DIR,"js"))
@@ -98,7 +98,7 @@ func js_dir() {
 }
 
 func fonts_dir() {
-	if runtime.GOOS == "windows" || runtime.GOOS == "linux" {
+	if runtime.GOOS == "windows" || runtime.GOOS == "linux" || runtime.GOOS == "darwin" {
 		_, err := os.Stat(path.Join(STATIC_DIR, "fonts"))
 		if err != nil {
 			Info.Printf("Creating %s", path.Join(STATIC_DIR,"fonts"))
@@ -155,7 +155,7 @@ func downloadFromUrl(url string, outDir string) {
 
 
 func dir_init() {
-
+	Info.Println("Running installation for", runtime.GOOS)
 	// Create Application Directories
 	Info.Println("Checking app directories")
 	setup_music_dir()
