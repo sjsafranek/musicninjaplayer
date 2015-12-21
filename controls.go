@@ -58,6 +58,31 @@ func nextSong() {
 
 func playMusic(song string) {
 	stopMusic()
+	cmd := "omxpalyer -o local"
+	args := []string{ path.Join(MUSIC_DIR, song) }
+	_, err := exec.Command(cmd, args...).Output()
+	if err != nil {
+		Warning.Println(err)
+	} else {
+		Info.Printf("Playing %s", song)
+	}
+}
+
+func stopMusic() {
+	Info.Printf("Stopping music")
+	cmd := "killall"
+	args := []string{"omxpalyer"}
+	exec.Command(cmd, args...).Output()
+	current_song_name = ""
+}
+
+
+/*
+
+// UBUNTU
+
+func playMusic(song string) {
+	stopMusic()
 	cmd := "play"
 	args := []string{ path.Join(MUSIC_DIR, song) }
 	_, err := exec.Command(cmd, args...).Output()
@@ -84,3 +109,5 @@ func stopMusic() {
 	exec.Command(cmd, args...).Output()
 	current_song_name = ""
 }
+
+*/

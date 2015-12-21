@@ -122,11 +122,27 @@ func socketClientHandler(w http.ResponseWriter, r *http.Request) {
 	<style>
 		
 		body { padding-top: 50px; }
+		#error {
+			background-color: white;
+			text-align: center;
+			font-weight: bold;
+			z-index: 15;
+			position: absolute;
+			bottom: 0;
+			top: 0;
+			right: 0;
+			left: 0;
+		}
 
 	</style>
 
 </head>
 <body>
+
+	<div id="error" style="display:none;">
+		<img src="/error" alt="error" style="margin-top:5px;">
+		<div id="error_message"></div>
+	</div>
 
 	<nav class="navbar navbar-inverse navbar-fixed-top">
 		<div class="container">
@@ -186,7 +202,6 @@ func socketClientHandler(w http.ResponseWriter, r *http.Request) {
 		// Setup Websocket
 		function getWebSocket() {
 			console.log("Opening websocket");
-			// ws = new WebSocket("ws://localhost:8080/ws");
 			var url = "ws://" +window.location.host + "/ws";
 
 			ws = new WebSocket(url);
@@ -200,8 +215,8 @@ func socketClientHandler(w http.ResponseWriter, r *http.Request) {
 			};
 			ws.onclose = function(e) { 
 				console.log("Websocket is closed"); 
-				alert("Connection error!!");
-				window.location = "/error";
+				$("#error").css("display","block");
+				$("#error_message").text("Connection error");
 			}
 			ws.onerror = function(e) { console.log(e); }
 			return ws;
