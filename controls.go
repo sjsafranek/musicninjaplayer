@@ -58,8 +58,8 @@ func nextSong() {
 
 func playMusic(song string) {
 	stopMusic()
-	cmd := "omxpalyer -o local"
-	args := []string{ path.Join(MUSIC_DIR, song) }
+	cmd := "sh"
+	args := []string{ "omxpalyer", "-o","local", path.Join(MUSIC_DIR, song) }
 	_, err := exec.Command(cmd, args...).Output()
 	if err != nil {
 		Warning.Println(err)
