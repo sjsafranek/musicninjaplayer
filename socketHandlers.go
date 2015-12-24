@@ -16,21 +16,6 @@ func clientErrorHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./static/error.png")
 }
 
-func webSocketNextSong(ws *websocket.Conn) {
-	nextSong()
-	if current_song_name != "No music files" {
-		resp := ApiReturn{Message: current_song_name, Results: "ok", Action: "play", Song: current_song_name}
-		websocket.JSON.Send(ws, resp)
-		playMusic(current_song_name)
-	} else {
-		Warning.Printf("no music files...")
-		return
-	}
-	// resp := ApiReturn{Message: "Song is finished", Results: "ok", Action: "stop", Song: ""}
-	// websocket.JSON.Send(ws, resp)
-	// webSocketNextSong(ws)
-}
-
 func webSocketHandler(ws *websocket.Conn) {
 	// http://41j.com/blog/2014/12/simple-websocket-example-golang/
 	// https://developer.mozilla.org/en-US/docs/Web/API/WebSocket
@@ -39,7 +24,6 @@ func webSocketHandler(ws *websocket.Conn) {
 		if err := websocket.JSON.Receive(ws, &data); err != nil {
 			stopMusic()
 			Error.Println(err)
-			// break
 			return
 		} else {
 			switch data.Action {
@@ -51,7 +35,6 @@ func webSocketHandler(ws *websocket.Conn) {
 					}
 					go func(ws *websocket.Conn) {
 						playMusic(current_song_name)
-						// webSocketNextSong(ws)
 						resp := ApiReturn{Message: "Song is finished", Results: "ok", Action: "stop", Song: ""}
 						websocket.JSON.Send(ws, resp)
 					}(ws)

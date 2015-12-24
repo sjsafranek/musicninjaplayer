@@ -4,6 +4,7 @@ import (
 	"os/exec"
 	"io/ioutil"
 	"path"
+	"bytes"
 )
 
 var current_song_name string
@@ -60,8 +61,6 @@ func playMusic(song string) {
 	stopMusic()
 	cmd := "/usr/bin/omxplayer"
 	args := []string{ "-o","local", path.Join(MUSIC_DIR, song) }
-	// cmd := "./play"
-	// args := []string{ path.Join(MUSIC_DIR, song) }
 	_, err := exec.Command(cmd, args...).Output()
 	if err != nil {
 		Warning.Println(err)
@@ -72,10 +71,25 @@ func playMusic(song string) {
 
 func stopMusic() {
 	Info.Printf("Stopping music")
-	cmd := "killall"
-	args := []string{ "/usr/bin/omxpalyer.bin" }
-	// args := []string{"./play.sh"}
-	exec.Command(cmd, args...).Output()
+	//cmd := "killall"
+	//args := []string{ "omxpalyer.bin" }
+	//_, err := exec.Command(cmd, args...).Output()
+	//if err != nil {
+	//	Error.Println(err)
+	//}
+
+	cmd := exec.Command("killall", "omxplayer.bin")
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	if err != nil {
+		Error.Println(err)
+		Error.Println(stderr.String())
+	}
+	Info.Println(out.String())
+
 	current_song_name = ""
 }
 
