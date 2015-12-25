@@ -71,13 +71,6 @@ func playMusic(song string) {
 
 func stopMusic() {
 	Info.Printf("Stopping music")
-	//cmd := "killall"
-	//args := []string{ "omxpalyer.bin" }
-	//_, err := exec.Command(cmd, args...).Output()
-	//if err != nil {
-	//	Error.Println(err)
-	//}
-
 	cmd := exec.Command("killall", "omxplayer.bin")
 	var out bytes.Buffer
 	var stderr bytes.Buffer
@@ -89,7 +82,6 @@ func stopMusic() {
 		Error.Println(stderr.String())
 	}
 	Info.Println(out.String())
-
 	current_song_name = ""
 }
 
