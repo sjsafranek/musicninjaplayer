@@ -10,7 +10,7 @@ import (
 	"bytes"
 )
 
-/*
+
 type SocketMessage struct {
 	Action  string    `json:"action"`
 	Song    string    `json:"song"`
@@ -20,7 +20,7 @@ func clientErrorHandler(w http.ResponseWriter, r *http.Request) {
 	Error.Println("%s client had an error", r.RemoteAddr)
 	http.ServeFile(w, r, "./static/error.png")
 }
-*/
+
 
 
 type MusicPlayer struct {
@@ -41,7 +41,7 @@ func (player *MusicPlayer) Play(new_track string) {
 			Info.Printf("Playing %s", player.Track)
 		}
 		Info.Println("Song is finished")
-		player.Next()
+		// player.Next()
 	}(player)
 	resp := ApiReturn{ Message:player.Track, Results:"ok", Action:"play", Song:player.Track }
 	websocket.JSON.Send(player.Ws, resp)
@@ -101,12 +101,7 @@ func (player *MusicPlayer) Random() string {
 
 
 
-
-
 /*
-
-var current_song_name string
-var current_song_id = 0 
 
 func getMusicFiles() []string {
 	results := []string{}
@@ -117,32 +112,27 @@ func getMusicFiles() []string {
 	return results
 }
 
-
-
 */
 
 
 
 
-
-
-
-func webSocketHandler2(ws *websocket.Conn) {
+func webSocketHandler(ws *websocket.Conn) {
 	var data SocketMessage
 	player := MusicPlayer{ Ws: ws, Id: 0 }
 	for {
-		if err := websocket.JSON.Receive(ws, &data); err != nil {
+		if err := websocket.JSON.Receive(player.Ws, &data); err != nil {
 			stopMusic()
 			Error.Println(err)
 			return
 		} else {
 			switch data.Action {
 				case "play":
-					current_song_name = data.Song
-					if current_song_name == "" {
-						current_song_name = player.Random()
+					player.Track = data.Song
+					if player.Track == "" {
+						player.Track = player.Random()
 					}
-					player.Play(current_song_name)	
+					player.Play(player.Track)	
 				case "back":
 					player.Back()
 				case "next":
@@ -158,7 +148,7 @@ func webSocketHandler2(ws *websocket.Conn) {
 
 
 
-func socketClientHandler2(w http.ResponseWriter, r *http.Request) {
+func socketClientHandler(w http.ResponseWriter, r *http.Request) {
 	files := getMusicFiles()
 	song_list := ""
 	for _, v := range files {
@@ -270,7 +260,7 @@ func socketClientHandler2(w http.ResponseWriter, r *http.Request) {
 		// Setup Websocket
 		function getWebSocket() {
 			console.log("Opening websocket");
-			var url = "ws://" +window.location.host + "/ws2";
+			var url = "ws://" +window.location.host + "/ws";
 
 			ws = new WebSocket(url);
 			ws.onopen = function(e) { 
@@ -337,4 +327,3 @@ func socketClientHandler2(w http.ResponseWriter, r *http.Request) {
 	tmpl, _ = tmpl.Parse(page)
 	tmpl.Execute(w, nil) 
 }
-

@@ -50,8 +50,8 @@ func main() {
 	http.Handle("/ws", websocket.Handler(webSocketHandler))
 
 
-	http.HandleFunc("/socket2", socketClientHandler2)	
-	http.Handle("/ws2", websocket.Handler(webSocketHandler))
+	// http.HandleFunc("/socket2", socketClientHandler2)	
+	// http.Handle("/ws2", websocket.Handler(webSocketHandler))
 
 
 	// Start app
