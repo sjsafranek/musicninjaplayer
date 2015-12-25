@@ -24,7 +24,7 @@ type MusicPlayer struct {
 	Id     string  `json:"id"`
 	Ws     *websocket.Conn
 }
-func (player *MusicPlayer) playsong(new_track string) {
+func (player *MusicPlayer) Play(new_track string) {
 	player.Track = new_track
 	go func() {
 		playMusic(player.Track)
@@ -33,13 +33,20 @@ func (player *MusicPlayer) playsong(new_track string) {
 	resp := ApiReturn{ Message:player.Track, Results:"ok", Action:"play", Song:player.Track }
 	websocket.JSON.Send(player.Ws, resp)
 }
-func (player *MusicPlayer) stopsong() {
+func (player *MusicPlayer) Stop() {
 	player.Track = ""
 	stopMusic()
 	resp := ApiReturn{ Message:"Silence!!", Results:"ok", Action:"stop", Song:player.Track }
 	websocket.JSON.Send(player.Ws, resp)
 }
-
+func (player *MusicPlayer) Back() {
+	backSong()
+	player.Play(current_song_name)
+}
+func (player *MusicPlayer) Next() {
+	nextSong()
+	player.Play(current_song_name)
+}
 
 
 
@@ -59,36 +66,19 @@ func webSocketHandler2(ws *websocket.Conn) {
 					} else {
 						current_song_name = randomSong()
 					}
-					player.playsong(current_song_name)	
+					player.Play(current_song_name)	
 				case "back":
-					backSong()
-					go func() {
-						if current_song_name != "No music files" {
-							playMusic(current_song_name)
-						} else {
-							Warning.Printf("no music files...")
-						}
-					}()
-					resp := ApiReturn{Message: "change track", Results: "ok", Action: "back", Song: current_song_name}
-					websocket.JSON.Send(ws, resp)
+					player.Back()
 				case "next":
-					nextSong()
-					go func() {
-						if current_song_name != "No music files" {
-							playMusic(current_song_name)
-						} else {
-							Warning.Printf("no music files...")
-						}
-					}()
-					resp := ApiReturn{Message: "change track", Results: "ok", Action: "next", Song: current_song_name}
-					websocket.JSON.Send(ws, resp)
+					player.Next()
 				default: // "stop"
-					player.stopsong()
+					player.Stop()
 			}
 		}
 		Info.Printf("Received: %s %s", data.Action, data.Song)
 	}
 }
+
 
 
 
