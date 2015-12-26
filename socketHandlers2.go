@@ -11,6 +11,15 @@ import (
 )
 
 
+
+type ApiReturn struct {
+	Action	 string	  `json:"action"`
+	Message	string	  `json:"message"`
+	Results	string	  `json:"results"`
+	Song	   string	  `json:"song"`
+}
+
+
 type SocketMessage struct {
 	Action  string    `json:"action"`
 	Song    string    `json:"song"`
@@ -100,9 +109,6 @@ func (player *MusicPlayer) Random() string {
 }
 
 
-
-/*
-
 func getMusicFiles() []string {
 	results := []string{}
 	files, _ := ioutil.ReadDir(MUSIC_DIR)
@@ -112,17 +118,13 @@ func getMusicFiles() []string {
 	return results
 }
 
-*/
-
-
-
 
 func webSocketHandler(ws *websocket.Conn) {
 	var data SocketMessage
 	player := MusicPlayer{ Ws: ws, Id: 0 }
 	for {
 		if err := websocket.JSON.Receive(player.Ws, &data); err != nil {
-			stopMusic()
+			player.Stop()
 			Error.Println(err)
 			return
 		} else {

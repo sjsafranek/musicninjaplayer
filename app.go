@@ -35,23 +35,18 @@ func main() {
 	http.Handle("/static/",http.StripPrefix("/static/",fs))
 	
 	// Main Routes
-	http.HandleFunc("/api", apiClientHandler)
 	http.HandleFunc("/socket", socketClientHandler)
 	http.HandleFunc("/ping", pingHandler)
 	http.HandleFunc("/error", clientErrorHandler)
 
 	//  Api Routes
-	http.HandleFunc("/api/v1/play", playMusicHandler)
-	http.HandleFunc("/api/v1/stop", stopMusicHandler)
-	http.HandleFunc("/api/v1/back", backTrackHandler)
-	http.HandleFunc("/api/v1/next", nextTrackHandler)
+	// http.HandleFunc("/api/v1/play", playMusicHandler)
+	// http.HandleFunc("/api/v1/stop", stopMusicHandler)
+	// http.HandleFunc("/api/v1/back", backTrackHandler)
+	// http.HandleFunc("/api/v1/next", nextTrackHandler)
 
 	// Web Socket
 	http.Handle("/ws", websocket.Handler(webSocketHandler))
-
-
-	// http.HandleFunc("/socket2", socketClientHandler2)	
-	// http.Handle("/ws2", websocket.Handler(webSocketHandler))
 
 
 	// Start app
