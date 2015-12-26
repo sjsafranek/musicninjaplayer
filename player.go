@@ -56,7 +56,9 @@ func (player *MusicPlayer) Stop() {
 		Error.Println(err)
 		Error.Println(stderr.String())
 	}
-	Info.Println(out.String())
+	if out.String() != "" {
+		Info.Println(out.String())
+	}
 	resp := ApiReturn{ Message:"Silence!!", Results:"ok", Action:"stop", Song:player.Track }
 	websocket.JSON.Send(player.Ws, resp)
 }
