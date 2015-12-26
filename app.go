@@ -13,8 +13,6 @@ import (
 // Defaults
 var start_time = time.Now()
 const PORT string = "8080"
-const CONF string = "music.json"
-
 
 func main() {
 	// Setup log
@@ -35,19 +33,12 @@ func main() {
 	http.Handle("/static/",http.StripPrefix("/static/",fs))
 	
 	// Main Routes
-	http.HandleFunc("/socket", socketClientHandler)
+	http.HandleFunc("/music", clientHandler)
 	http.HandleFunc("/ping", pingHandler)
-	http.HandleFunc("/error", clientErrorHandler)
-
-	//  Api Routes
-	// http.HandleFunc("/api/v1/play", playMusicHandler)
-	// http.HandleFunc("/api/v1/stop", stopMusicHandler)
-	// http.HandleFunc("/api/v1/back", backTrackHandler)
-	// http.HandleFunc("/api/v1/next", nextTrackHandler)
+	http.HandleFunc("/error", errorHandler)
 
 	// Web Socket
 	http.Handle("/ws", websocket.Handler(webSocketHandler))
-
 
 	// Start app
 	Info.Printf("Magic happens on port %s...", *port)
