@@ -24,6 +24,8 @@ func webSocketHandler(ws *websocket.Conn) {
 					player.Back()
 				case "next":
 					player.Next()
+				case "playlist":
+					player.Playlist(data.Song)
 				default: // "stop"
 					player.Stop()
 			}

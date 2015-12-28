@@ -5,6 +5,7 @@ import (
 	"html/template"
 	"encoding/json"
 	"time"
+	"path"
 )
 
 // Serves static files
@@ -36,15 +37,20 @@ func errorHandler(w http.ResponseWriter, r *http.Request) {
 
 // Client handler
 func clientHandler(w http.ResponseWriter, r *http.Request) {
-	files := getMusicFiles()
+	files, folders := getMusicFiles(MUSIC_DIR)
 	song_list := ""
+	for _, v := range folders {
+		song_list += `
+					<tr class="playlist">
+						<td class="warning" id="` + path.Join(MUSIC_DIR,v) + `"><i class="fa fa-caret-square-o-right"></i> ` + v + `</td>
+					</tr>`
+	}
 	for _, v := range files {
 		song_list += `
 					<tr class="song">
-						<td id="` + v + `">` + v + `</td>
+						<td id="` + path.Join(MUSIC_DIR,v) + `">` + v + `</td>
 					</tr>`
 	}
-
 	Info.Printf("%s something is happening", r.RemoteAddr)
 	tmpl := template.New("music controller template")
 	page :=`
@@ -130,7 +136,7 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 			<div class="col-md-6">
 				<!-- <h3>Playlist</h3> -->
 				<h3></h3>
-				<table class="table table-striped table-bordered table-hover">
+				<table id="playlist" class="table table-striped table-bordered table-hover">
 					<tr>
 						<th class="success">Songs</th>
 					</tr>
@@ -144,32 +150,11 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 	<script src="/static/js/bootstrap.min.js"></script>
 	<script>
 
-		// Setup Websocket
-		function getWebSocket() {
-			console.log("Opening websocket");
-			var url = "ws://" +window.location.host + "/ws";
 
-			ws = new WebSocket(url);
-			ws.onopen = function(e) { 
-				console.log("Websocket is open");
-			};
-			ws.onmessage = function(e) {
-				var data = JSON.parse(e.data);
-				console.log("Data recieved:",data);
-				$("#current")[0].innerText = " " + data.song;
-			};
-			ws.onclose = function(e) { 
-				console.log("Websocket is closed"); 
-				$("#error").css("display","block");
-				$("#error_message").text("Connection error");
-			}
-			ws.onerror = function(e) { console.log(e); }
-			return ws;
-		}
-
-		var ws = getWebSocket();
-
-
+		/**
+		 * Sends request to server to play random song
+		 * @param {Event} event
+		 */
 		function playSong(event) {
 			console.log("Sending WebSocket request")
 			var msg = {
@@ -188,6 +173,11 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		$("button").on("click", playSong);
 
+
+		/**
+		 * Sends request to server to play specified song
+		 * @param {Event} event
+		 */
 		function chooseSong(event) {
 			console.log("Sending WebSocket request")
 			var msg = {
@@ -204,7 +194,61 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 				window.location = "/error";
 			}
 		}
-		$("tr").on("click",chooseSong)
+		$("tr.song").on("click",chooseSong);
+
+
+		/**
+		 * Gets list of songs for playlist
+		 * @param {Event} event
+		 */
+		function getSongList(event) {
+			console.log("Sending WebSocket request")
+			var msg = {
+				action: "playlist",
+				song: event.target.id
+			}
+			var payload = JSON.stringify(msg);
+			try {
+				ws.send(payload);
+			}
+			catch(err) {
+				console.log(err);
+				alert(err);
+				window.location = "/error";
+			}
+		}
+		$("tr.playlist").on("click",getSongList);
+
+
+		// Setup Websocket
+		function getWebSocket() {
+			console.log("Opening websocket");
+			var url = "ws://" +window.location.host + "/ws";
+			ws = new WebSocket(url);
+			ws.onopen = function(e) { 
+				console.log("Websocket is open");
+			};
+			ws.onmessage = function(e) {
+				var data = JSON.parse(e.data);
+				console.log("Data recieved:",data);
+				var song = data.song.split("/");
+				$("#current")[0].innerText = " " + song[song.length-1];
+				if (data.playlist != "") {
+					$("#playlist").html(data.playlist);
+					$("tr.song").on("click", chooseSong);
+					$("tr.playlist").on("click", getSongList);
+					$(".back_directory").on("click", getSongList);
+				}
+			};
+			ws.onclose = function(e) { 
+				console.log("Websocket is closed"); 
+				$("#error").css("display","block");
+				$("#error_message").text("Connection error");
+			}
+			ws.onerror = function(e) { console.log(e); }
+			return ws;
+		}
+		var ws = getWebSocket();
 
 
 	</script>
@@ -214,3 +258,5 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 	tmpl, _ = tmpl.Parse(page)
 	tmpl.Execute(w, nil) 
 }
+
+

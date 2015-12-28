@@ -4,6 +4,8 @@ import (
 	"math/rand"
 	"time"
 	"os/user"
+	// "reflect"
+	// "fmt"
 )
 
 // Returns random int between min and max
@@ -43,3 +45,14 @@ func homeDir() string {
 	}
 	return usr.HomeDir
 }
+
+
+// // Gets object methods
+// func getMethods() {
+// 	fooType := reflect.TypeOf(files[i])
+// 	for i := 0; i < fooType.NumMethod(); i++ {
+// 		method := fooType.Method(i)
+// 		Info.Println(method.Name)
+// 	}
+// }
+
