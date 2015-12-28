@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"time"
 	"os/user"
+	"io/ioutil"
 	// "reflect"
 	// "fmt"
 )
@@ -45,6 +46,32 @@ func homeDir() string {
 	}
 	return usr.HomeDir
 }
+
+// Gets all files in a directory
+func getFilesInDirectory(directory string) []string {
+	results := []string{}
+	files, _ := ioutil.ReadDir(directory)
+	for i := 0; i < len(files); i++ {
+		if files[i].IsDir() == false {
+			results = append(results, files[i].Name())
+		}
+	}
+	return results
+}
+
+// Gets all folders in directory
+func getFoldersInDirectory(directory string) []string {
+	folders := []string{}
+	files, _ := ioutil.ReadDir(directory)
+	for i := 0; i < len(files); i++ {
+		if files[i].IsDir() {
+			folders = append(folders, files[i].Name())
+		}
+	}
+	return folders
+}
+
+
 
 
 // // Gets object methods

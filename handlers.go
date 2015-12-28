@@ -31,13 +31,14 @@ func pingHandler(w http.ResponseWriter, r *http.Request) {
 
 // Serves error page
 func errorHandler(w http.ResponseWriter, r *http.Request) {
-	Error.Println("%s client had an error", r.RemoteAddr)
+	// Error.Println("%s client had an error", r.RemoteAddr)
 	http.ServeFile(w, r, "./static/error.png")
 }
 
 // Client handler
 func clientHandler(w http.ResponseWriter, r *http.Request) {
-	files, folders := getMusicFiles(MUSIC_DIR)
+	files := getFilesInDirectory(MUSIC_DIR)
+	folders := getFoldersInDirectory(MUSIC_DIR)
 	song_list := ""
 	for _, v := range folders {
 		song_list += `
@@ -156,11 +157,11 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 		 * @param {Event} event
 		 */
 		function playSong(event) {
-			console.log("Sending WebSocket request")
 			var msg = {
 				action: event.target.id,
 				song: null
 			};
+			console.log("Sending WebSocket request",msg)
 			var payload = JSON.stringify(msg);
 			try {
 				ws.send(payload);
@@ -171,6 +172,7 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 				window.location = "/error";
 			}
 		}
+
 		$("button").on("click", playSong);
 
 
@@ -179,11 +181,11 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 		 * @param {Event} event
 		 */
 		function chooseSong(event) {
-			console.log("Sending WebSocket request")
 			var msg = {
 				action: "play",
 				song: event.target.id
 			}
+			console.log("Sending WebSocket request",msg)
 			var payload = JSON.stringify(msg);
 			try {
 				ws.send(payload);
@@ -194,6 +196,7 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 				window.location = "/error";
 			}
 		}
+		
 		$("tr.song").on("click",chooseSong);
 
 
@@ -202,11 +205,11 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 		 * @param {Event} event
 		 */
 		function getSongList(event) {
-			console.log("Sending WebSocket request")
 			var msg = {
 				action: "playlist",
 				song: event.target.id
 			}
+			console.log("Sending WebSocket request",msg)
 			var payload = JSON.stringify(msg);
 			try {
 				ws.send(payload);
@@ -220,7 +223,9 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 		$("tr.playlist").on("click",getSongList);
 
 
-		// Setup Websocket
+		/**
+		 * Sets up websocket connection
+		 */
 		function getWebSocket() {
 			console.log("Opening websocket");
 			var url = "ws://" +window.location.host + "/ws";
@@ -232,7 +237,7 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 				var data = JSON.parse(e.data);
 				console.log("Data recieved:",data);
 				var song = data.song.split("/");
-				$("#current")[0].innerText = " " + song[song.length-1];
+				$("#current").html(" " + song[song.length-1]);
 				if (data.playlist != "") {
 					$("#playlist").html(data.playlist);
 					$("tr.song").on("click", chooseSong);
@@ -248,6 +253,9 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 			ws.onerror = function(e) { console.log(e); }
 			return ws;
 		}
+
+
+		// Start websocket
 		var ws = getWebSocket();
 
 

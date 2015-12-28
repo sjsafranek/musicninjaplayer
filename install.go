@@ -155,16 +155,16 @@ func downloadFromUrl(url string, outDir string) {
 
 
 func dir_init() {
-	Info.Println("Running installation for", runtime.GOOS)
+	Trace.Println("Running installation for", runtime.GOOS)
 	// Create Application Directories
-	Info.Println("Checking app directories")
+	Trace.Println("Checking app directories")
 	setup_music_dir()
 	ninja_dir()
 	ninja_music_dir()
 	static_dir()
 
 	// Icons & Images
-	Info.Println("Checking resource files")
+	Trace.Println("Checking resource files")
 	downloadFromUrl("https://raw.githubusercontent.com/sjsafranek/musicninjaplayer/master/static/logo.png", STATIC_DIR)
 	downloadFromUrl("https://raw.githubusercontent.com/sjsafranek/musicninjaplayer/master/static/favicon.ico", STATIC_DIR)
 	downloadFromUrl("https://raw.githubusercontent.com/sjsafranek/musicninjaplayer/master/static/error.png", STATIC_DIR)

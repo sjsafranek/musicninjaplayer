@@ -1,13 +1,20 @@
 package main
 
 import (
+	"os"
 	"golang.org/x/net/websocket"
 )
 
+type SocketMessage struct {
+	Action    string    `json:"action"`
+	Song      string    `json:"song"`
+}
+
+// Create a websocket and keeps it open
 func webSocketHandler(ws *websocket.Conn) {
-	var data SocketMessage
-	player := MusicPlayer{ Ws: ws, Id: 0 }
+	player := MusicPlayer{ Ws: ws, Id: 0, Dir: MUSIC_DIR }
 	for {
+		var data SocketMessage
 		if err := websocket.JSON.Receive(player.Ws, &data); err != nil {
 			player.Stop()
 			Error.Println(err)
@@ -15,8 +22,10 @@ func webSocketHandler(ws *websocket.Conn) {
 		} else {
 			switch data.Action {
 				case "play":
+					// Why is it receiving a directory path? Client doesn't appear to send it
+					fileInfo, _ := os.Stat(data.Song) 
 					player.Track = data.Song
-					if player.Track == "" {
+					if player.Track == "" || fileInfo.IsDir() {
 						player.Track = player.Random()
 					}
 					player.Play(player.Track)	
@@ -33,7 +42,3 @@ func webSocketHandler(ws *websocket.Conn) {
 		Info.Printf("Received: %s %s", data.Action, data.Song)
 	}
 }
-
-
-
-
