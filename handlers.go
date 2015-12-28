@@ -37,6 +37,10 @@ func errorHandler(w http.ResponseWriter, r *http.Request) {
 
 // Client handler
 func clientHandler(w http.ResponseWriter, r *http.Request) {
+	if r.URL.Query().Get("apikey") != APIKEY {
+		Warning.Println("Incorrect apikey")
+		errorHandler(w, r)
+	}
 	files := getFilesInDirectory(MUSIC_DIR)
 	folders := getFoldersInDirectory(MUSIC_DIR)
 	song_list := ""
@@ -196,7 +200,7 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 				window.location = "/error";
 			}
 		}
-		
+
 		$("tr.song").on("click",chooseSong);
 
 
