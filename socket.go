@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	// "path"
 	"golang.org/x/net/websocket"
 )
 
@@ -23,10 +24,11 @@ func webSocketHandler(ws *websocket.Conn) {
 			switch data.Action {
 				case "play":
 					// Why is it receiving a directory path? Client doesn't appear to send it
-					fileInfo, _ := os.Stat(data.Song) 
-					player.Track = data.Song
-					if player.Track == "" || fileInfo.IsDir() {
+					fileInfo, _ := os.Stat(data.Song)
+					if data.Song == "" || fileInfo.IsDir() {
 						player.Track = player.Random()
+					} else {
+						player.Track = data.Song
 					}
 					player.Play(player.Track)	
 				case "back":

@@ -6,7 +6,7 @@ import (
 	"os/user"
 	"io/ioutil"
 	// "reflect"
-	// "fmt"
+	// "os"
 )
 
 // Returns random int between min and max
@@ -73,13 +73,14 @@ func getFoldersInDirectory(directory string) []string {
 
 
 
+/*
+// Gets object methods
+func getMethods(file os.FileInfo) {
+	fooType := reflect.TypeOf(file)
+	for i := 0; i < fooType.NumMethod(); i++ {
+		method := fooType.Method(i)
+		Info.Println(method.Name)
+	}
+}
 
-// // Gets object methods
-// func getMethods() {
-// 	fooType := reflect.TypeOf(files[i])
-// 	for i := 0; i < fooType.NumMethod(); i++ {
-// 		method := fooType.Method(i)
-// 		Info.Println(method.Name)
-// 	}
-// }
-
+*/

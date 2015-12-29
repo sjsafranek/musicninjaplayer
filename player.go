@@ -26,6 +26,7 @@ type MusicPlayer struct {
 func (player *MusicPlayer) Play(new_track string) {
 	player.Stop()
 	player.Track = new_track
+	Info.Println(player.Track)
 	go func(player *MusicPlayer) {
 		Info.Printf("Playing %s", player.Track)
 		cmd := "/usr/bin/omxplayer"
@@ -68,7 +69,8 @@ func (player *MusicPlayer) Back() {
 	player.Track = "No music files"
 	if len(files) != 0 {
 		player.Id = modulo((player.Id - 1), len(files))
-		player.Track = files[player.Id].Name()
+		// player.Track = files[player.Id].Name()
+		player.Track = path.Join(player.Dir, files[player.Id].Name())
 		if files[player.Id].IsDir() {	// 
 			player.Back()
 		}
@@ -80,7 +82,8 @@ func (player *MusicPlayer) Next() {
 	player.Track = "No music files"
 	if len(files) != 0 {
 		player.Id = (player.Id + 1) % len(files)
-		player.Track = files[player.Id].Name()
+		// player.Track = files[player.Id].Name()
+		player.Track = path.Join(player.Dir, files[player.Id].Name())
 		if files[player.Id].IsDir() {
 			player.Next()
 		}
@@ -94,9 +97,9 @@ func (player *MusicPlayer) Random() string {
 		if files[i].Name() == player.Track || files[i].IsDir() {
 			return player.Random()
 		} else {
-			player.Track = files[i].Name()
+			player.Track = path.Join(player.Dir, files[i].Name())
 			player.Id = i
-			return files[i].Name()
+			return path.Join(player.Dir, files[i].Name())
 		}
 	} else {
 		Warning.Println("No files found")
@@ -109,6 +112,7 @@ func (player *MusicPlayer) Playlist(directory string) {
 		directory = MUSIC_DIR
 	}
 	player.Dir = directory
+	player.Id = 0
 	files := getFilesInDirectory(directory)
 	folders := getFoldersInDirectory(directory)
 	var song_list string
