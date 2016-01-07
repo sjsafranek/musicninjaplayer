@@ -13,13 +13,3 @@ Defaults:
 
 Uses `omxplayer` which comes with raspberrian os.
 
-
-[TODO]
------
-
-Include support for sox
-
-sudo apt-get install sox
-
-go get golang.org/x/net/websocket
-
