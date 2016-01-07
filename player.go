@@ -1,28 +1,29 @@
 package main
 
 import (
+	"bytes"
 	"golang.org/x/net/websocket"
-	"os/exec"
 	"io/ioutil"
+	"os/exec"
 	"path"
 	"path/filepath"
-	"bytes"
 )
 
 type ApiReturn struct {
-	Action    string           `json:"action"`
-	Message   string           `json:"message"`
-	Results   string           `json:"results"`
-	Song      string           `json:"song"`
-	Playlist  string           `json:"playlist"`
+	Action   string `json:"action"`
+	Message  string `json:"message"`
+	Results  string `json:"results"`
+	Song     string `json:"song"`
+	Playlist string `json:"playlist"`
 }
 
 type MusicPlayer struct {
-	Track     string           `json:"track"`
-	Id        int 	           `json:"id"`
-	Dir       string           `json:"list"`
-	Ws        *websocket.Conn
+	Track string `json:"track"`
+	Id    int    `json:"id"`
+	Dir   string `json:"list"`
+	Ws    *websocket.Conn
 }
+
 func (player *MusicPlayer) Play(new_track string) {
 	player.Stop()
 	player.Track = new_track
@@ -31,7 +32,7 @@ func (player *MusicPlayer) Play(new_track string) {
 		Info.Printf("Playing %s", player.Track)
 		cmd := "/usr/bin/omxplayer"
 		// args := []string{ "-o","local", path.Join(player.Dir, player.Track) }
-		args := []string{ "-o","local", player.Track }
+		args := []string{"-o", "local", player.Track}
 		_, err := exec.Command(cmd, args...).Output()
 		if err != nil {
 			Error.Println(err)
@@ -40,7 +41,7 @@ func (player *MusicPlayer) Play(new_track string) {
 		}
 		// player.Next()
 	}(player)
-	resp := ApiReturn{ Message: player.Track, Results: "ok", Action: "play", Song: player.Track }
+	resp := ApiReturn{Message: player.Track, Results: "ok", Action: "play", Song: player.Track}
 	websocket.JSON.Send(player.Ws, resp)
 }
 func (player *MusicPlayer) Stop() {
@@ -61,7 +62,7 @@ func (player *MusicPlayer) Stop() {
 	if out.String() != "" {
 		Info.Println(out.String())
 	}
-	resp := ApiReturn{ Message: "Silence!!", Results: "ok", Action: "stop", Song: player.Track }
+	resp := ApiReturn{Message: "Silence!!", Results: "ok", Action: "stop", Song: player.Track}
 	websocket.JSON.Send(player.Ws, resp)
 }
 func (player *MusicPlayer) Back() {
@@ -71,7 +72,7 @@ func (player *MusicPlayer) Back() {
 		player.Id = modulo((player.Id - 1), len(files))
 		// player.Track = files[player.Id].Name()
 		player.Track = path.Join(player.Dir, files[player.Id].Name())
-		if files[player.Id].IsDir() {	// 
+		if files[player.Id].IsDir() { //
 			player.Back()
 		}
 	}
@@ -93,7 +94,7 @@ func (player *MusicPlayer) Next() {
 func (player *MusicPlayer) Random() string {
 	files, _ := ioutil.ReadDir(player.Dir)
 	if len(files) != 0 {
-		i := randInt(0,len(files))
+		i := randInt(0, len(files))
 		if files[i].Name() == player.Track || files[i].IsDir() {
 			return player.Random()
 		} else {
@@ -128,16 +129,15 @@ func (player *MusicPlayer) Playlist(directory string) {
 	for _, v := range folders {
 		song_list += `
 					<tr class="playlist">
-						<td class="warning" id="` + path.Join(directory,v) + `"><i class="fa fa-caret-square-o-right"></i> ` + v + `</td>
+						<td class="warning" id="` + path.Join(directory, v) + `"><i class="fa fa-caret-square-o-right"></i> ` + v + `</td>
 					</tr>`
 	}
 	for _, v := range files {
 		song_list += `
 					<tr class="song">
-						<td id="` + path.Join(directory,v) + `">` + v + `</td>
+						<td id="` + path.Join(directory, v) + `">` + v + `</td>
 					</tr>`
 	}
-	resp := ApiReturn{ Message:"Get playlist", Results:"ok", Action:"playlist", Song:"", Playlist: song_list }
+	resp := ApiReturn{Message: "Get playlist", Results: "ok", Action: "playlist", Song: "", Playlist: song_list}
 	websocket.JSON.Send(player.Ws, resp)
 }
-

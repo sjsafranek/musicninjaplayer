@@ -1,19 +1,28 @@
 package main
 
 import (
-	"math/rand"
-	"time"
-	"os/user"
 	"io/ioutil"
+	"math/rand"
+	"os/user"
+	"time"
 	// "reflect"
 	// "os"
+	"os/exec"
+	"strings"
 )
 
 // Returns random int between min and max
 func randInt(min, max int) int {
 	seed := time.Now().UnixNano()
 	rand.Seed(seed)
-	return rand.Intn(max - min) + min
+	return rand.Intn(max-min) + min
+}
+
+// Returns random float between min and max
+func randFloat(min, max float64) float64 {
+	seed := time.Now().UnixNano()
+	rand.Seed(seed)
+	return (rand.Float64() * (max - min)) + min
 }
 
 // Checks to see if a string is in a list of strings
@@ -42,7 +51,7 @@ func modulo(x int, y int) int {
 func homeDir() string {
 	usr, err := user.Current()
 	if err != nil {
-		Error.Fatal( err )
+		Error.Fatal(err)
 	}
 	return usr.HomeDir
 }
@@ -71,7 +80,17 @@ func getFoldersInDirectory(directory string) []string {
 	return folders
 }
 
-
+// Returns uuid
+// Linix only
+func getUuid() string {
+	out, err := exec.Command("uuidgen").Output()
+	if err != nil {
+		Error.Println(err)
+	}
+	uuid := string(out)
+	uuid = strings.Replace(uuid, "\n", "", -1)
+	return uuid
+}
 
 /*
 // Gets object methods

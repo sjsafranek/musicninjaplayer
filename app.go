@@ -1,18 +1,20 @@
 package main
 
 import (
-	"os"
-	"time"
-	"io/ioutil"
 	"flag"
-	"net/http"
-	"path"
 	"golang.org/x/net/websocket"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"path"
+	"time"
 )
 
 // Defaults
 var start_time = time.Now()
+
 const PORT string = "8080"
+
 var APIKEY string
 
 // Main
@@ -36,8 +38,8 @@ func main() {
 
 	// Static Files
 	fs := http.FileServer(http.Dir(STATIC_DIR))
-	http.Handle("/static/",http.StripPrefix("/static/",fs))
-	
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
 	// Main Routes
 	http.HandleFunc("/music", clientHandler)
 	http.HandleFunc("/ping", pingHandler)
@@ -48,10 +50,9 @@ func main() {
 
 	// Start app
 	Info.Printf("Magic happens on port %s...", *port)
-	err := http.ListenAndServe(":" + *port, nil)
+	err := http.ListenAndServe(":"+*port, nil)
 	if err != nil {
 		panic(err)
 	}
 
 }
-

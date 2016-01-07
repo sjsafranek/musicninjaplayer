@@ -1,11 +1,11 @@
 package main
 
 import (
-	"net/http"
-	"html/template"
 	"encoding/json"
-	"time"
+	"html/template"
+	"net/http"
 	"path"
+	"time"
 )
 
 // Serves static files
@@ -20,9 +20,9 @@ func serveSingle(pattern string, filename string) {
 // Ping
 func pingHandler(w http.ResponseWriter, r *http.Request) {
 	type Ping struct {
-		Message	   string	  `json:"message"`
-		Registered	time.Time   `json:"registered"`
-		Runtime	   float64	 `json:"runtime"`
+		Message    string    `json:"message"`
+		Registered time.Time `json:"registered"`
+		Runtime    float64   `json:"runtime"`
 	}
 	Info.Printf("%s something is happening...", r.RemoteAddr)
 	resp := Ping{Message: "Pong", Registered: start_time, Runtime: time.Since(start_time).Seconds()}
@@ -47,18 +47,18 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 	for _, v := range folders {
 		song_list += `
 					<tr class="playlist">
-						<td class="warning" id="` + path.Join(MUSIC_DIR,v) + `"><i class="fa fa-caret-square-o-right"></i> ` + v + `</td>
+						<td class="warning" id="` + path.Join(MUSIC_DIR, v) + `"><i class="fa fa-caret-square-o-right"></i> ` + v + `</td>
 					</tr>`
 	}
 	for _, v := range files {
 		song_list += `
 					<tr class="song">
-						<td id="` + path.Join(MUSIC_DIR,v) + `">` + v + `</td>
+						<td id="` + path.Join(MUSIC_DIR, v) + `">` + v + `</td>
 					</tr>`
 	}
 	Info.Printf("%s something is happening", r.RemoteAddr)
 	tmpl := template.New("music controller template")
-	page :=`
+	page := `
 <head>
 
 	<title>Music Ninja Player</title>
@@ -268,7 +268,5 @@ func clientHandler(w http.ResponseWriter, r *http.Request) {
 </body>
 	`
 	tmpl, _ = tmpl.Parse(page)
-	tmpl.Execute(w, nil) 
+	tmpl.Execute(w, nil)
 }
-
-
